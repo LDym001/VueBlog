@@ -20,13 +20,11 @@ import {useRoute,useRouter} from 'vue-router'
 import {nanoid} from 'nanoid'
 import axios from 'axios'
 export default {
-  name: 'BlogAticle',
+  name: 'BlogArticle',
   async setup() {
     const rt = useRoute()
-   
     let blogList
-
-    const getData = () => axios.post('http://127.0.0.1:3000/getdesc',{'data':rt.query})
+    const getData = () => axios.post('http://119.91.123.231:3000/getdesc',{'data':rt.query})
     let blogData = await getData()
     blogList = blogData.data
     
@@ -56,27 +54,4 @@ export default {
     font-weight: 300;
     color: #313135;
   }
-  /* p {
-    font-weight: 300;
-    margin-left: 10px;
-  }
-  .title {
-    font-size: 1.25rem;
-    margin-bottom: 4px;
-    color: #6c757d;
-    margin-left: 10px;
-  }
-  .content {
-    margin-top: 8px;
-    margin-bottom: 8px;
-    font-size: 1rem;
-  }
-  li div {
-    margin-left: 10px;
-    margin-bottom: 10px;
-  }
-  li div span {
-    margin-right: 15px;
-    font-size: 13px;
-  } */
 </style>

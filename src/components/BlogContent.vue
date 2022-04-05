@@ -9,16 +9,12 @@ import axios from 'axios'
 import {useRoute} from 'vue-router'
 
 export default {
-  name: 'BlogDetail',
+  name: 'BlogContent',
   async setup() {
     const route = useRoute()
-    console.log('-----------------',route.query,'----------------')
-    const getData = () => axios.post('http://127.0.0.1:3000/getdata')
+    const getData = () => axios.post('http://119.91.123.231:3000/getdata',{'path':route.query.filePath})
     let BlogMdFile = await getData()
-    console.log('aaaaaaaaaaaaaaa',BlogMdFile,'aaaaaaaaaaa')
     let MdFile = BlogMdFile.data
-    console.log('bbbbbb',MdFile,'bbbbbbbbbb');
-
     return {
       MdFile
     }

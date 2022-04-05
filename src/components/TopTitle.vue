@@ -7,7 +7,7 @@
       </div>
       <div class="title-right">
         <a href="/">首页</a>
-        <router-link v-if="loginStatus" to="/login">个人主页</router-link>
+        <router-link v-if="loginStatus" to="/profile">个人主页</router-link>
         <router-link v-else="loginStatus" to="/login">登录</router-link>
       </div>
     </div>
@@ -15,14 +15,17 @@
 </template>
 
 <script>
-import {computed,ref} from 'vue'
+import {computed,reactive} from 'vue'
 import {useStore} from 'vuex'
 export default {
   name: 'TopTitle',
   setup() {
     const store = useStore()
+    let statusObj = reactive({
+      status: sessionStorage.isLogin
+    })
     return {
-      loginStatus: computed(() => store.state.isLogin)
+      loginStatus: computed(() => store.state.isLogin||sessionStorage.isLogin)
     }
   }
 }

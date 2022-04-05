@@ -1,8 +1,12 @@
 import {createRouter,createWebHashHistory} from 'vue-router'
-import BlogAticle from '../components/BlogAticle.vue'
+import BlogArticle from '../components/BlogArticle.vue'
+import BlogList from '../components/BlogList.vue'
 import Blog from '../views/Blog.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import Profile from '../views/Profile.vue'
+import Edit from '../views/Edit.vue'
+import Create from '../views/Create.vue'
 const routes = [
   {
     path: '/',
@@ -16,7 +20,7 @@ const routes = [
     children: [
       {
         path: '/home/content',
-        component: BlogAticle
+        component: BlogArticle
       }
     ]
   },
@@ -27,6 +31,25 @@ const routes = [
   {
     path: '/blog',
     component: Blog
+  },
+  {
+    path: '/profile',
+    component: Profile,
+    redirect: '/profile/content',
+    children: [
+      {
+        path: '/profile/content',
+        component: BlogList
+      }
+    ]
+  },
+  {
+    path: '/edit',
+    component: Edit
+  },
+  {
+    path: '/create',
+    component: Create
   }
 ]
 

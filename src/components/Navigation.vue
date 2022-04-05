@@ -8,14 +8,19 @@
           path: '/home/content',
           query: {
             tag: item,
-            category: getCate(item)
           }
         }">{{item}}笔记</router-link>
         </li>
     </ul>
     <ul class="catogry">
-      <li v-for="(item,index) in catData.category" :key="index">
-        <a href="javascript:;">{{item}}</a>
+        <li v-for="(item,index) in catData.category" :key="index">
+          <router-link :to="{
+          path:'/home/content',
+          query: {
+            tag: activeTag,
+            category: item
+          }
+        }">{{item}}</router-link>
         </li>
     </ul>
   </div>
@@ -25,21 +30,40 @@
 </template>
 
 <script>
-import {getCurrentInstance,reactive} from 'vue'
+import {getCurrentInstance,computed,reactive} from 'vue'
+import {useStore} from 'vuex'
+import {useRoute} from 'vue-router'
 import {nanoid} from 'nanoid'
 import axios from 'axios'
-// import insAxios from '../server/index.js'
 
 export default {
   name: 'Navigation',
   async setup() {
     let _this = getCurrentInstance()
+    const store = useStore()
     let tag = []
+    const route = useRoute()
     let catData = reactive({
       category: []
     })
     let categoryList = []
 
+    const getTag = () => axios.post('http://119.91.123.231:3000/gettag')
+    const getCategory = () => axios.post('http://119.91.123.231:3000/getcategory',{})
+    //将tag数据保存到vuex中
+    if(!store.state.notetypes) {
+      let tagList = await getTag()
+      tag = tagList.data
+      store.commit('addNoteType',tag)
+    } else {
+      tag = store.state.notetypes
+    }
+    
+    categoryList = await getCategory()
+    categoryList.data[tag[0]].forEach(item => {
+      catData.category.push(item.category)
+    });
+    
     const select = index => {
       let lis = _this.refs.li
       //修改选中样式
@@ -57,27 +81,14 @@ export default {
       })
     }
 
-    const getTag = () => axios.post('http://127.0.0.1:3000/gettag',{})
-    const getCategory = () => axios.post('http://127.0.0.1:3000/getcategory',{})
-
-    let tagList = await getTag()
-    tag = tagList.data
-
-    categoryList = await getCategory()
-    categoryList.data[tag[0]].forEach(item => {
-      catData.category.push(item.category)
-    });
-
-    function getCate(tag) {
-      return categoryList.data[tag][0]?.category
-    }
 
     return {
       tag,
       select,
       catData,
-      getCate,
-      nanoid
+      nanoid,
+      route,
+      activeTag: computed(() => route.query.tag?route.query.tag:tag[0])
     }
   }
 }

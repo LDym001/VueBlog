@@ -39,14 +39,16 @@ export default {
     const router = useRouter()
     const store = useStore()
     const login = () => {
-      axios.post('http://127.0.0.1:3000/login',{
+      axios.post('http://119.91.123.231:3000/login',{
         username: _this.refs.username.value,
         password: _this.refs.password.value
       })
       .then(res => {
         localStorage.setItem('token',res.data.token)
-        store.commit('changeLoginStatus',_this.refs.username.value)
-        router.push('/')
+        store.commit('changeLoginStatus')
+        sessionStorage.setItem('isLogin',true)
+        router.push('/profile')
+        console.log('跳转结束')
       })
       .catch(error => {
         console.log(error);
